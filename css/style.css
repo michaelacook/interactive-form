@@ -214,3 +214,8 @@ option {
 		clear: both;
 	}
 }
+
+/* apply 0 margin to total cost h2 */
+#total {
+	margin: 0;
+}

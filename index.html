@@ -34,8 +34,11 @@
           <option value="student">Student</option>
           <option value="other">Other</option>  
         </select> 
-        <label for="other-title">Other:</label>
-        <input type="text" id="other-title" name="user-title-other" placeholder="Your Job Role">          
+        <div id="other-title-field">
+          <label for="other-title">Other:</label>
+          <input type="text" id="other-title" name="user-title-other" placeholder="Your Job Role">          
+        </div>
+        
       </fieldset>
       
       <fieldset class="shirt">
@@ -61,7 +64,7 @@
             </select>
           </div>
 
-          <div id="colors-js-puns" class="">
+          <div id="colors-js-puns">
             <label for="color">Color:</label>
             <select id="color">
               <option value="cornflowerblue">Cornflower Blue (JS Puns shirt only)</option>
@@ -104,7 +107,6 @@
             <input type="checkbox" name="npm" data-day-and-time="Wednesday 1pm-4pm" data-cost="100"> 
             npm Workshop — Wednesday 1pm-4pm, $100
           </label>
-                  	
       </fieldset>
       <fieldset>
         <legend>Payment Info</legend>
