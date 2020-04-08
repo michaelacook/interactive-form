@@ -14,6 +14,10 @@ const designSelect = document.getElementById('design');
 const shirtColoursSelect = document.getElementById('color');
 const shirtColoursField = document.getElementById('colors-js-puns');
 const checkBoxes = document.querySelectorAll('input[type="checkbox"]');
+const paymentSelect = document.getElementById('payment');
+const payPalMessage = document.getElementById('paypal');
+const bitCoinMessage = document.getElementById('bitcoin');
+const creditCardDetails = document.getElementById('credit-card');
 
 
 
@@ -150,4 +154,43 @@ const addCheckBoxEventListeners = () => {
 
 // Add the event listeners to each checkbox
 addCheckBoxEventListeners();
+
+
+/*----------------------------------------- PAYMENT SECTION----------------------------------------- */
+
+
+// set credit card as default payment in payment select 
+paymentSelect.querySelector('option[value="credit card"]').setAttribute('selected', "");
+
+
+// Set the "Select Payment Method" option in the payment select menu to disabled
+paymentSelect.querySelector('option[value="select method"]').setAttribute('disabled', "");
+
+
+// set paypal and bitcoin option messages to display:none by default
+payPalMessage.style.display = 'none'; 
+bitCoinMessage.style.display = 'none'; 
+
+
+// toggle display of different payment method sections depending on value of the payment method selected
+paymentSelect.addEventListener('change', e => {
+    switch (paymentSelect.value) {
+        case "credit card": 
+            payPalMessage.style.display = 'none'; 
+            bitCoinMessage.style.display = 'none';
+            creditCardDetails.style.display = 'block';
+            break;
+        case "paypal": 
+            creditCardDetails.style.display = 'none';
+            bitCoinMessage.style.display = 'none';
+            payPalMessage.style.display = 'block';
+            break;
+        case "bitcoin":
+            creditCardDetails.style.display = 'none';
+            payPalMessage.style.display = 'none';
+            bitCoinMessage.style.display = 'block';
+            break;
+    }
+});
+
 
