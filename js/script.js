@@ -342,7 +342,7 @@ const validateCreditCardInputs = () => {
     } else if (!cardNumberRegex.test(cardNumber.value)) {
         insertMessage(cardNumber, "Card number must be between 13 and 16 digits.", false);
         valid = false;
-    }
+    } 
 
     if (!validate(zipCode)) {
         insertMessage(zipCode, "Zip code required.", false);
@@ -350,7 +350,7 @@ const validateCreditCardInputs = () => {
     } else if (!zipCodeRegex.test(zipCode.value)) {
         insertMessage(zipCode, "Must be 5 dgits.", false);
         valid = false;
-    }
+    } 
 
     if (!validate(cvv)) {
         insertMessage(cvv, "CVV required.", false);
@@ -358,8 +358,9 @@ const validateCreditCardInputs = () => {
     } else if (!cvvRegex.test(cvv.value)) {
         insertMessage(cvv, "Must be 3 digits.", false);
         valid = false;
-    }
+    } 
 
+    if (valid) insertMessage(creditCardDetails, "Looks good!", true);
     return valid;
 }
 
@@ -370,10 +371,10 @@ const validateCreditCardInputs = () => {
  * @param {Event} e - submit event 
  */
 const validateForm = (e) => {
-    validName = validateNameInput(); 
-    validEmail = validateEmailInput(); 
-    validActivities = validateActivities(); 
-    validCc = validateCreditCardInputs();
+    const validName = validateNameInput(); 
+    const validEmail = validateEmailInput(); 
+    const validActivities = validateActivities(); 
+    const validCc = validateCreditCardInputs();
     if (!validName ||
         !validEmail ||
         !validActivities ||
