@@ -2,6 +2,10 @@
 Full Stack JavaScript project 3: Interactive Form 
 
 Michael Cook
+
+I am aiming for "Exceeds Expectations". Please do not let it pass if it does not meet that standard.
+
+The real-time validation and messaging is applied to the name, email, and activities sections of the form.
 */
 
 
