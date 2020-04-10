@@ -1,7 +1,7 @@
 /*
 Full Stack JavaScript project 3: Interactive Form 
 
-Michael Cook
+by Michael Cook
 
 I am aiming for "Exceeds Expectations". Please do not let it pass if it does not meet that standard.
 
@@ -10,6 +10,8 @@ The real-time validation and messaging is applied to the name, email, and activi
 
 
 /*----------------------------------------- GLOBAL VARIABLES ----------------------------------------- */
+
+
 const form = document.querySelector('form');
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('mail');
@@ -34,11 +36,11 @@ const creditCardDetails = document.getElementById('credit-card');
 nameInput.focus();
 
 
-// set other-title input and label to display:none by default
+// set otherTitle input and label to display:none by default
 otherTitleField.style.display = 'none';
 
 
-// show other-title input and label if 'other' is clicked on in job role select
+// show otherTitle input and label if 'other' is clicked on in job role select
 userTitleSelect.addEventListener('change', e => {
     if (userTitleSelect.value === 'other') {
         otherTitleField.style.display = 'block';
@@ -53,7 +55,7 @@ userTitleSelect.addEventListener('change', e => {
 
 
 
-// make colours field display:none by default
+// set shirtcoloursField to display:none by default
 shirtColoursField.style.display = 'none';
 
 
@@ -85,8 +87,8 @@ designSelect.addEventListener('change', e => {
 
 
 /**
- * Iterate over all checkboxes and disable inputs for conflicting workshops when target checkbox is checked 
- * When target checkbox is unchecked, iterate over checkbox inputs and remove disabled properties
+ * Iterate over all checkboxes and disable inputs for conflicting activities when target checkbox is checked 
+ * When target checkbox is unchecked, iterate over checkbox inputs and remove disabled properties and styles
  * @param {HTML element} checkbox - checkbox input being clicked
  */
 const toggleConflicting = (checkbox) => {
@@ -169,7 +171,7 @@ addCheckBoxEventListeners();
 paymentSelect.querySelector('option[value="credit card"]').setAttribute('selected', "");
 
 
-// Set the "Select Payment Method" option in the payment select menu to disabled
+// set the "Select Payment Method" option in the payment select menu to disabled
 paymentSelect.querySelector('option[value="select method"]').setAttribute('disabled', "");
 
 
@@ -195,7 +197,6 @@ paymentSelect.addEventListener('change', e => {
             creditCardDetails.style.display = 'none';
             payPalMessage.style.display = 'none';
             bitCoinMessage.style.display = 'block';
-            break;
     }
 });
 
@@ -204,8 +205,8 @@ paymentSelect.addEventListener('change', e => {
 
 
 /**
- * Determine is a form control has a value
- * @param {HTML node} el - form control to be validated
+ * Determine if a form control has a value
+ * @param {HTML element} el - form control to be validated
  * @return {Bool} false when el fails, true on pass 
  */
 const validate = (el) => {
@@ -219,9 +220,9 @@ const validate = (el) => {
 /**
  * Insert a validation error or OK message immediately after the target element
  * @param {HTML element} el - target element 
- * @param {String} message - error message to be displayed
- * @param {Bool} valid - true if valid message, false if invalid
- * @param {Bool} border - default true for red border property
+ * @param {String} message - error or OK message to be displayed
+ * @param {Bool} valid - true if OK message, false if invalid
+ * @param {Bool} border - default true for border property, pass false for no border
  */
 const insertMessage = (el, message, valid, border=true) => {
     const msg = document.createElement('span');
@@ -261,6 +262,7 @@ const removeMessage = (el) => {
 
 /**
  * Validate the nameInput input
+ * Invalid if empty or contains characters other than letters
  * @return {Bool} true if valid, false on invalid
  */
 const validateNameInput = () => {
@@ -319,7 +321,7 @@ const validateActivities = () => {
 
 
 /**
- * Validate credit card section
+ * Validate credit card section inputs
  * If credit card is not the selected payment method do an early return
  * @return {Bool} true if all fields are valid, false if any fail
  */
