@@ -14,6 +14,7 @@ const userTitleSelect = document.getElementById('title');
 const designSelect = document.getElementById('design');
 const shirtColoursSelect = document.getElementById('color');
 const shirtColoursField = document.getElementById('colors-js-puns');
+const activitiesFieldset = document.querySelector('.activities');
 const checkBoxes = document.querySelectorAll('input[type="checkbox"]');
 const paymentSelect = document.getElementById('payment');
 const payPalMessage = document.getElementById('paypal');
@@ -212,29 +213,42 @@ const validate = (el) => {
 
 
 /**
- * Insert a validation error message immediately after the target element
+ * Insert a validation error or OK message immediately after the target element
  * @param {HTML element} el - target element 
  * @param {String} message - error message to be displayed
+ * @param {Bool} valid - true if valid message, false if invalid
  * @param {Bool} border - default true for red border property
  */
-const insertValidationErrorMessage = (el, message, border=true) => {
+const insertMessage = (el, message, valid, border=true) => {
     const msg = document.createElement('span');
-    msg.setAttribute('class', 'error-message');
-    msg.textContent = message;
-    el.parentNode.insertBefore(msg, el.nextSibling);
-    if (border) el.classList.add('error');
+    if (!valid) {
+        msg.setAttribute('class', 'error-message');
+        msg.textContent = message;
+        el.parentNode.insertBefore(msg, el.nextSibling);
+        if (border) el.classList.add('error');
+    } else {
+        msg.setAttribute('class', 'ok-message');
+        msg.textContent = message;
+        el.parentNode.insertBefore(msg, el.nextSibling);
+        if (border) el.classList.add('ok');
+    }
 }
 
 
 /**
- * Remove error message and styling from an element when it passes validation
+ * Remove error or OK message and styling from an element when it passes validation
  * @param {HTML element} el 
  */
-const removeErrorMessage = (el) => {
+const removeMessage = (el) => {
     const sibling = el.nextElementSibling;
-    if (el.classList.contains('error')) el.classList.remove('error');
+    if (el.classList.contains('error')) {
+        el.classList.remove('error');
+    } else if (el.classList.contains('ok')) {
+        el.classList.remove('ok');
+    }
     if (sibling) {
-        if (el.nextElementSibling.className === 'error-message') {
+        if (el.nextElementSibling.className === 'error-message' ||
+            el.nextElementSibling.className === 'ok-message') {
             el.nextElementSibling.remove();
         }
     }
@@ -246,11 +260,16 @@ const removeErrorMessage = (el) => {
  * @return {Bool} true if valid, false on invalid
  */
 const validateNameInput = () => {
-    removeErrorMessage(nameInput);
+    removeMessage(nameInput);
+    const nameRegex = /^[A-Za-z]+$/;
     if (!validate(nameInput)) {
-        insertValidationErrorMessage(nameInput, "Please provide a name.");
+        insertMessage(nameInput, "Please provide a name.", false);
+        return false;
+    } else if (!nameRegex.test(nameInput.value)) {
+        insertMessage(nameInput, "Name can only contain letters.", false);
         return false;
     }
+    insertMessage(nameInput, "Looks good!", true);
     return true;
 }
 
@@ -260,15 +279,16 @@ const validateNameInput = () => {
  * @return {Bool} true if valid, false on invalid
  */
 const validateEmailInput = () => {
-    removeErrorMessage(emailInput);
+    removeMessage(emailInput);
     const regex = /[\w]+@[\w]+.(com|net|ca|io|org|co\.uk)/;
     if (!validate(emailInput)) {
-        insertValidationErrorMessage(emailInput, "Please provide an email address.");
+        insertMessage(emailInput, "Please provide an email address.", false);
         return false;
     } else if (!regex.test(emailInput.value)) {
-        insertValidationErrorMessage(emailInput, "The email you provided is not a valid email.");
+        insertMessage(emailInput, "The email you provided is not a valid email.", false);
         return false;
     }
+    insertMessage(emailInput, "Looks good!", true);
     return true;
 }
 
@@ -278,8 +298,7 @@ const validateEmailInput = () => {
  * @return {Bool} true if valid, false on invalid
  */
 const validateActivities = () => {
-    const activitiesFieldset = document.querySelector('.activities');
-    removeErrorMessage(activitiesFieldset);
+    removeMessage(activitiesFieldset);
     let valid = false;
     for (let i = 0; i < checkBoxes.length; i++) {
         if (checkBoxes[i].checked) {
@@ -287,9 +306,10 @@ const validateActivities = () => {
         }
     }
     if (!valid) {
-        insertValidationErrorMessage(activitiesFieldset, "Please select at least one activity.", false);
+        insertMessage(activitiesFieldset, "Please select at least one activity.", false, false);
         return false;
     }
+    insertMessage(activitiesFieldset, "Looks good!", true, false);
     return true;
 }
 
@@ -301,40 +321,42 @@ const validateActivities = () => {
  */
 const validateCreditCardInputs = () => {
     if (paymentSelect.value !== 'credit card') return true;
+    
     let valid = true;
+
     const cardNumber = document.getElementById('cc-num');
     const zipCode = document.getElementById('zip');
     const cvv = document.getElementById('cvv');
-
-    removeErrorMessage(cardNumber);
-    removeErrorMessage(zipCode);
-    removeErrorMessage(cvv);
+  
+    removeMessage(cardNumber);
+    removeMessage(zipCode);
+    removeMessage(cvv);
 
     cardNumberRegex = /^\d{13}$|^\d{16}$/;
     zipCodeRegex = /^\d{5}$/;
     cvvRegex = /^\d{3}$/;
 
     if (!validate(cardNumber)) {
-        insertValidationErrorMessage(cardNumber, "Please provide a credit card number.");
+        insertMessage(cardNumber, "Please provide a credit card number.", false);
         valid = false;
     } else if (!cardNumberRegex.test(cardNumber.value)) {
-        insertValidationErrorMessage(cardNumber, "The card number provided is not valid.");
+        insertMessage(cardNumber, "Card number must be between 13 and 16 digits.", false);
         valid = false;
     }
 
     if (!validate(zipCode)) {
-        insertValidationErrorMessage(zipCode, "Zip code required.");
+        insertMessage(zipCode, "Zip code required.", false);
         valid = false;
     } else if (!zipCodeRegex.test(zipCode.value)) {
-        insertValidationErrorMessage(zipCode, "Zip code invalid.");
+        insertMessage(zipCode, "Must be 5 dgits.", false);
         valid = false;
     }
 
     if (!validate(cvv)) {
-        insertValidationErrorMessage(cvv, "cvv required.");
+        insertMessage(cvv, "CVV required.", false);
         valid = false;
     } else if (!cvvRegex.test(cvv.value)) {
-        insertValidationErrorMessage(cvv, "cvv invalid.");
+        insertMessage(cvv, "Must be 3 digits.", false);
         valid = false;
     }
 
@@ -363,3 +385,24 @@ const validateForm = (e) => {
 
 // submit event listener. calls the validateForm function when form is submitted
 document.addEventListener('submit', e => validateForm(e));
+
+
+/*----------------------------------------- REAL-TIME VALIDATION ----------------------------------------- */
+
+
+// real time validation and messaging of basic info
+[nameInput, emailInput].forEach(el => {
+    el.addEventListener('keyup', e => {
+        if (el.id === "name") {
+            validateNameInput();
+        } else if (el.id === "mail") {
+            validateEmailInput();
+        }
+    });
+});
+
+
+// real time validation message for activities fieldset 
+activitiesFieldset.addEventListener('change', e => {
+    validateActivities();
+});
