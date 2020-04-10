@@ -286,7 +286,7 @@ const validateNameInput = () => {
  */
 const validateEmailInput = () => {
     removeMessage(emailInput);
-    const regex = /[\w]+@[\w]+.(com|net|ca|io|org|co\.uk)/;
+    const regex = /\w+@[\w]+.(com|net|ca|io|org|co\.uk)$/;
     if (!validate(emailInput)) {
         insertMessage(emailInput, "Please provide an email address.", false);
         return false;
