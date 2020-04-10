@@ -332,6 +332,7 @@ const validateCreditCardInputs = () => {
     const zipCode = document.getElementById('zip');
     const cvv = document.getElementById('cvv');
   
+    removeMessage(creditCardDetails);
     removeMessage(cardNumber);
     removeMessage(zipCode);
     removeMessage(cvv);
