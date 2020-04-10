@@ -219,3 +219,11 @@ option {
 #total {
 	margin: 0;
 }
+
+.error {
+	border: 1.5px solid red;
+}
+
+.error-message {
+	color: red;
+}

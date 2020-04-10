@@ -8,6 +8,7 @@ Michael Cook
 /*----------------------------------------- GLOBAL VARIABLES ----------------------------------------- */
 const form = document.querySelector('form');
 const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('mail');
 const otherTitleField = document.getElementById('other-title-field');
 const userTitleSelect = document.getElementById('title');
 const designSelect = document.getElementById('design');
@@ -156,7 +157,7 @@ const addCheckBoxEventListeners = () => {
 addCheckBoxEventListeners();
 
 
-/*----------------------------------------- PAYMENT SECTION----------------------------------------- */
+/*----------------------------------------- PAYMENT SECTION ----------------------------------------- */
 
 
 // set credit card as default payment in payment select 
@@ -194,3 +195,171 @@ paymentSelect.addEventListener('change', e => {
 });
 
 
+/*----------------------------------------- FORM VALIDATION ----------------------------------------- */
+
+
+/**
+ * Determine is a form control has a value
+ * @param {HTML node} el - form control to be validated
+ * @return {Bool} false when el fails, true on pass 
+ */
+const validate = (el) => {
+    if (!el.value) {
+        return false;
+    }
+    return true;
+}
+
+
+/**
+ * Insert a validation error message immediately after the target element
+ * @param {HTML element} el - target element 
+ * @param {String} message - error message to be displayed
+ * @param {Bool} border - default true for red border property
+ */
+const insertValidationErrorMessage = (el, message, border=true) => {
+    const msg = document.createElement('span');
+    msg.setAttribute('class', 'error-message');
+    msg.textContent = message;
+    el.parentNode.insertBefore(msg, el.nextSibling);
+    if (border) el.classList.add('error');
+}
+
+
+/**
+ * Remove error message and styling from an element when it passes validation
+ * @param {HTML element} el 
+ */
+const removeErrorMessage = (el) => {
+    const sibling = el.nextElementSibling;
+    if (el.classList.contains('error')) el.classList.remove('error');
+    if (sibling) {
+        if (el.nextElementSibling.className === 'error-message') {
+            el.nextElementSibling.remove();
+        }
+    }
+}
+
+
+/**
+ * Validate the nameInput input
+ * @return {Bool} true if valid, false on invalid
+ */
+const validateNameInput = () => {
+    removeErrorMessage(nameInput);
+    if (!validate(nameInput)) {
+        insertValidationErrorMessage(nameInput, "Please provide a name.");
+        return false;
+    }
+    return true;
+}
+
+
+/**
+ * Validate the emailInput input
+ * @return {Bool} true if valid, false on invalid
+ */
+const validateEmailInput = () => {
+    removeErrorMessage(emailInput);
+    const regex = /[\w]+@[\w]+.(com|net|ca|io|org|co\.uk)/;
+    if (!validate(emailInput)) {
+        insertValidationErrorMessage(emailInput, "Please provide an email address.");
+        return false;
+    } else if (!regex.test(emailInput.value)) {
+        insertValidationErrorMessage(emailInput, "The email you provided is not a valid email.");
+        return false;
+    }
+    return true;
+}
+
+
+/**
+ * Validate activities to make sure at least one activity is selected
+ * @return {Bool} true if valid, false on invalid
+ */
+const validateActivities = () => {
+    const activitiesFieldset = document.querySelector('.activities');
+    removeErrorMessage(activitiesFieldset);
+    let valid = false;
+    for (let i = 0; i < checkBoxes.length; i++) {
+        if (checkBoxes[i].checked) {
+            valid = true;
+        }
+    }
+    if (!valid) {
+        insertValidationErrorMessage(activitiesFieldset, "Please select at least one activity.", false);
+        return false;
+    }
+    return true;
+}
+
+
+/**
+ * Validate credit card section
+ * If credit card is not the selected payment method do an early return
+ * @return {Bool} true if all fields are valid, false if any fail
+ */
+const validateCreditCardInputs = () => {
+    if (paymentSelect.value !== 'credit card') return true;
+    let valid = true;
+    const cardNumber = document.getElementById('cc-num');
+    const zipCode = document.getElementById('zip');
+    const cvv = document.getElementById('cvv');
+
+    removeErrorMessage(cardNumber);
+    removeErrorMessage(zipCode);
+    removeErrorMessage(cvv);
+
+    cardNumberRegex = /^\d{13}$|^\d{16}$/;
+    zipCodeRegex = /^\d{5}$/;
+    cvvRegex = /^\d{3}$/;
+
+    if (!validate(cardNumber)) {
+        insertValidationErrorMessage(cardNumber, "Please provide a credit card number.");
+        valid = false;
+    } else if (!cardNumberRegex.test(cardNumber.value)) {
+        insertValidationErrorMessage(cardNumber, "The card number provided is not valid.");
+        valid = false;
+    }
+
+    if (!validate(zipCode)) {
+        insertValidationErrorMessage(zipCode, "Zip code required.");
+        valid = false;
+    } else if (!zipCodeRegex.test(zipCode.value)) {
+        insertValidationErrorMessage(zipCode, "Zip code invalid.");
+        valid = false;
+    }
+
+    if (!validate(cvv)) {
+        insertValidationErrorMessage(cvv, "cvv required.");
+        valid = false;
+    } else if (!cvvRegex.test(cvv.value)) {
+        insertValidationErrorMessage(cvv, "cvv invalid.");
+        valid = false;
+    }
+
+    return valid;
+}
+
+
+/**
+ * Call all validation functions and if any fail, prevent submit event
+ * The logic behind the reassigning of validForm is that 
+ * @param {Event} e - submit event 
+ */
+const validateForm = (e) => {
+    validName = validateNameInput(); 
+    validEmail = validateEmailInput(); 
+    validActivities = validateActivities(); 
+    validCc = validateCreditCardInputs();
+    if (!validName ||
+        !validEmail ||
+        !validActivities ||
+        !validCc) { 
+        e.preventDefault(); 
+    }
+}
+
+
+// submit event listener. calls the validateForm function when form is submitted
+document.addEventListener('submit', e => validateForm(e));
