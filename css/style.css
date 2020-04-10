@@ -227,3 +227,11 @@ option {
 .error-message {
 	color: red;
 }
+
+.ok {
+	border: 1.5px solid green;
+}
+
+.ok-message {
+	color: green;
+}
