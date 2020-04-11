@@ -321,54 +321,81 @@ const validateActivities = () => {
 
 
 /**
- * Validate credit card section inputs
+ * Validate credit card number
+ */
+const validateCardNumber = () => {
+    const cardNumber = document.getElementById('cc-num');
+    removeMessage(cardNumber);
+    cardNumberRegex = /^\d{13}$|^\d{16}$/;
+    if (!validate(cardNumber)) {
+        insertMessage(cardNumber, "Please provide a credit card number.", false);
+        return false;
+    } else if (!cardNumberRegex.test(cardNumber.value)) {
+        insertMessage(cardNumber, "Card number must be between 13 and 16 digits.", false);
+        return false;
+    }
+    insertMessage(cardNumber, "Ok!", true);
+    return true;
+}
+
+
+/**
+ * Validate zip code
+ */
+const validateZip = () => {
+    const zipCode = document.getElementById('zip');
+    removeMessage(zipCode);
+    zipCodeRegex = /^\d{5}$/;
+    if (!validate(zipCode)) {
+        insertMessage(zipCode, "Zip code required.", false);
+        return false;
+    } else if (!zipCodeRegex.test(zipCode.value)) {
+        insertMessage(zipCode, "Must be 5 dgits.", false);
+        return false;
+    }
+    insertMessage(zipCode, "Ok!", true);
+    return true;
+}
+
+
+/**
+ * validateCvv
+ */
+const validateCvv = () => {
+    const cvv = document.getElementById('cvv');
+    removeMessage(cvv);
+    cvvRegex = /^\d{3}$/;
+    if (!validate(cvv)) {
+        insertMessage(cvv, "CVV required.", false);
+        return false;
+    } else if (!cvvRegex.test(cvv.value)) {
+        insertMessage(cvv, "Must be 3 digits.", false);
+        return false;
+    }
+    insertMessage(cvv, "Ok!", true);
+    return true;
+}
+
+
+/**
+ * Call all functions to validate credit card data
  * If credit card is not the selected payment method do an early return
  * @return {Bool} true if all fields are valid, false if any fail
  */
 const validateCreditCardInputs = () => {
     if (paymentSelect.value !== 'credit card') return true;
     
-    let valid = true;
+    const validCC = validateCardNumber();
+    const validZip = validateZip();
+    const validCvv = validateCvv();
 
-    const cardNumber = document.getElementById('cc-num');
-    const zipCode = document.getElementById('zip');
-    const cvv = document.getElementById('cvv');
-  
-    removeMessage(creditCardDetails);
-    removeMessage(cardNumber);
-    removeMessage(zipCode);
-    removeMessage(cvv);
-
-    cardNumberRegex = /^\d{13}$|^\d{16}$/;
-    zipCodeRegex = /^\d{5}$/;
-    cvvRegex = /^\d{3}$/;
-
-    if (!validate(cardNumber)) {
-        insertMessage(cardNumber, "Please provide a credit card number.", false);
-        valid = false;
-    } else if (!cardNumberRegex.test(cardNumber.value)) {
-        insertMessage(cardNumber, "Card number must be between 13 and 16 digits.", false);
-        valid = false;
-    } 
-
-    if (!validate(zipCode)) {
-        insertMessage(zipCode, "Zip code required.", false);
-        valid = false;
-    } else if (!zipCodeRegex.test(zipCode.value)) {
-        insertMessage(zipCode, "Must be 5 dgits.", false);
-        valid = false;
-    } 
-
-    if (!validate(cvv)) {
-        insertMessage(cvv, "CVV required.", false);
-        valid = false;
-    } else if (!cvvRegex.test(cvv.value)) {
-        insertMessage(cvv, "Must be 3 digits.", false);
-        valid = false;
-    } 
-
-    if (valid) insertMessage(creditCardDetails, "Looks good!", true);
-    return valid;
+    if (!validCC ||
+        !validZip ||
+        !validCvv) {
+            return false;
+        }
+    
+    return true;
 }
 
 
