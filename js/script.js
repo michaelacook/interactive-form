@@ -226,17 +226,15 @@ const validate = (el) => {
  */
 const insertMessage = (el, message, valid, border=true) => {
     const msg = document.createElement('span');
+    msg.textContent = message;
     if (!valid) {
         msg.setAttribute('class', 'error-message');
-        msg.textContent = message;
-        el.parentNode.insertBefore(msg, el.nextSibling);
         if (border) el.classList.add('error');
     } else {
         msg.setAttribute('class', 'ok-message');
-        msg.textContent = message;
-        el.parentNode.insertBefore(msg, el.nextSibling);
         if (border) el.classList.add('ok');
     }
+    el.parentNode.insertBefore(msg, el.nextSibling);
 }
 
 
