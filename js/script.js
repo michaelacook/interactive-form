@@ -249,11 +249,10 @@ const removeMessage = (el) => {
     } else if (el.classList.contains('ok')) {
         el.classList.remove('ok');
     }
-    if (sibling) {
-        if (el.nextElementSibling.className === 'error-message' ||
-            el.nextElementSibling.className === 'ok-message') {
-            el.nextElementSibling.remove();
-        }
+    if (sibling && 
+       (sibling.className === 'error-message' ||
+        sibling.className === 'ok-message')) {
+        sibling.remove();
     }
 }
 
@@ -348,7 +347,7 @@ const validateZip = () => {
         insertMessage(zipCode, "Zip code required.", false);
         return false;
     } else if (!zipCodeRegex.test(zipCode.value)) {
-        insertMessage(zipCode, "Must be 5 dgits.", false);
+        insertMessage(zipCode, "Must be 5 digits.", false);
         return false;
     }
     insertMessage(zipCode, "Ok!", true);
@@ -399,7 +398,6 @@ const validateCreditCardInputs = () => {
 
 /**
  * Call all validation functions and if any fail, prevent submit event
- * The logic behind the reassigning of validForm is that 
  * @param {Event} e - submit event 
  */
 const validateForm = (e) => {
